@@ -5,7 +5,8 @@
 
 配置元数据--实例化容器--注册Bean（实例化--依赖注入）
 
-容器
+容器------------
+
 Bean-----------
 命名Bean：唯一的id，别名name
 实例化Bean：构造函数，静态工厂，实例工厂（静态工厂和实例工厂的方法返回值类型不需要和包含该方法的类相同）
@@ -37,12 +38,26 @@ Bean-----------
              set方法通过先实例化B，但B未完全初始化，即B对A的依赖项为空
              此时A可以通过任意方式强制注入B，将B注入A后，再将A注入B
         不存在在循环依赖时，依赖注入之前会将被依赖项完全初始化
-     配置问题可见性延迟：若配置出错，容器实例化时不一定会报错，可能会在使用时实例化Bean，并发现问题
-     更详细的配置
-        将value对应的String值转换为属性或参数的实际类型
-        p命名空间实现更简洁的xml配置，但设计时不会报错，运行时才会。支持自动完成属性的IDE可以避免此问题，如idea，eclipse
-        配置java.util.Properties，利用javaBean PropertiesEditor机制
-        Idref作为一种防错机制，使用Idref会让容器在部署时验证引用的Bean是否存在，否则只会在使用到被引用的Bean时才会发现错误， 4.0 beans XSD及之后将idref改为idref bean
+        配置问题可见性延迟：若配置出错，容器实例化时不一定会报错，可能会在使用时实例化Bean，并发现问题
+更详细的配置
+    将value对应的String值转换为属性或参数的实际类型
+    p命名空间实现更简洁的xml配置，但设计时不会报错，运行时才会。支持自动完成属性的IDE可以避免此问题，如idea，eclipse
+    配置java.util.Properties，利用javaBean PropertiesEditor机制
+    Idref作为一种防错机制，使用Idref会让容器在部署时验证引用的Bean是否存在，否则只会在使用到被引用的Bean时才会发现错误， 4.0 beans XSD及之后将idref改为idref bean
+    对其他Bean的引用。设置属性之前根据需要初始化它。可以指定Id和Name
+    Bean定义中的内部Bean
+    collection元素
+    集合合并，父子集合
+    p命名空间，c命名空间，只存在spring中，不是xml的格式
+depends on
+懒加载
+自动装配，四种模式，no，byName，byType，constructor
+方法注入，查找方法注入，任意方法替换
+scope作用域
+
+        
+        
+
         
         
         
