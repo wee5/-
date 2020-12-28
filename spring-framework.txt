@@ -54,7 +54,24 @@ depends on
 自动装配，四种模式，no，byName，byType，constructor
 方法注入，查找方法注入，任意方法替换
 scope作用域
-
+    单例作用域：整个IoC容器对单例Bean类型的使用都是同一对象
+    原型作用域：每次使用原型Bean类型都是新对象，容器不会回调其销毁方法
+    依赖原型Bean的单例Bean：单例Bean只会实例化一次，希望单例作用域bean在运行时重复获取原型作用域bean的新实例？
+    request,session,application,websocket scope：只能在web感知的容器实现类中才能使用
+        初始化web配置
+        请求作用域：LoginAction
+        会话作用域：UserPreferences
+        应用作用域：AppPreferences
+        Scoped Beans as Dependencies
+    自定义作用域
+    线程作用域：默认不会注册
+    生命周期和Bean的作用域的关系？
+        在Bean的作用于对应的生命周期中，每次使用到Bean类型都是同一对象；Bean随着该生命周期的销毁而销毁
+    单例作用域与单例模式的区别？
+        单例作用域指在一个Ioc容器中，每次使用单例Bean类型都会是同一个对象
+    单例作用域与原型作用域的选择？
+        经验法则：对所有有状态bean使用原型作用域，对无状态bean使用单例作用域
+定制Bean的性质
         
         
 
