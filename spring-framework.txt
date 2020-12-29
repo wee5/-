@@ -95,8 +95,58 @@ Bean定义继承-----------
     引用抽象的父Bean，或通过父Bean id调用getBean()，都将返回错误
     
 容器扩展点------------
-    BeanPostProcessor：定义回调方法，可以实现这些方法来提供您自己的(或覆盖容器的默认)实例化逻辑、依赖项解析逻辑等，
-    Ordered：其order属性控制BeanPostProcessor实例的运行顺序
+    容器扩展指在Bean实例化前后操作Bean，意为扩展操作
+    扩展点
+        使用BeanPostProcessor扩展
+            在容器实例化Bean前后，BeanPostProcessor执行方法
+            需要在普通Bean之前处理，所有直接引用BeanPostProcessor的Bean都会在容器启动时直接实例化
+        使用BeanFactoryPostProcessor扩展：操作bean配置元数据
+        FactoryBean扩展：通过在id前加上&，getBean(“&myBean”)将返回FactoryBean实例本身
+    实现BeanPostProcessor扩展的方式
+        编程方式：addBeanPostProcessor()方法
+            此方法的BeanPostProcessor实例不遵循有序规则，登记顺序决定执行顺序，且BeanPostProcessor均先于普通Bean被实例化
+    实现Ordered接口，可以控制扩展点的执行顺序
+    Spring提供的BeanPostProcessor实现
+        AOP自动代理：由于AOP自动代理是BeanPostProcessor的实现，所以BeanPostProcessor和直接引用它的Bean都不适用自动代理
+        RequiredAnnotationBeanPostProcessor：确保使用(任意)注释标记的bean上的JavaBean属性实际上(配置为)被注入了值的依赖关系
+    Spring提供的BeanFactoryPostProcessor实现
+        PropertySourcesPlaceholderConfigurer：读取指定路径文件，配合占位符使用
+        PropertyOverrideConfigurer：可以覆盖xml中Bean定义的属性值，被覆盖值总是文字值，而不会被解析为Bean引用
+        
+        可以配置多个BeanPostProcessor实例，通过继承Order控制其执行顺序
+        使用BeanFactoryPostProcessor自定义配置元数据
+        
+基于注解的容器配置----------------
+    注解配置和xml配置的优缺点
+        注解配置更简洁，但更接近源码
+        xml配置更集中，可以在不修改源码和重新编译的情况下修改元数据，注释注入在XML注入之前执行。因此，XML配置将覆盖通过这两种方法连接的属性的注释
+            类路径扫描找到的xml定义的bean或组件类，容器通常预先知道具体的类型
+    描述：注释配置依赖字节码元数据来连接组件，通过使用相关类、方法或字段声明上的注释来将配置移动到组件类本身
+    隐式注册
+    @Required：应用于bean属性设置方法，spring 5.1已弃用
+    @Autowired：
+        适用范围
+            构造函数：只有一个构造函数可以不使用@Auowired，多个构造函数且无默认构造函数时，必须使用@Autowired为容器指定一个构造函数
+            setter方法：
+            任意名称的多个参数的方法
+            字段：若属性required = false，自动装配会忽略该属性
+            数组字段：容器会提供该类型的所有Bean，可以控制数组中对象的顺序
+            类型化映射实例，键类型必须是String，容器会提供值类型的所有Bean
+            BeanFactory、ApplicationContext、Environment、ResourceLoader、ApplicationEventPublisher和MessageSource。这些接口及其扩展的接口，如ConfigurableApplicationContext或ResourcePatternResolver，都是自动解析的，不需要特殊设置
+        属性
+            required = false，不调用无匹配的注入点，保留默认值。默认自动装配未匹配到Bean时，则自动装配失败
+                注入的构造函数和工厂方法参数是一个特殊情况，因为@Autowired中的required属性有不同的含义，这是由于Spring的构造函数解析算法可能潜在地处理多个构造函数
+                默认情况下，构造函数和工厂方法参数是有效需要的，但在单构造函数场景中有一些特殊规则，比如如果没有匹配的bean，则多元素注入点(数组、集合、映射)解析为空实例
+                多个构造函数使用@Autowired，一个保留required默认值true，其余都必须申明required = false
+                通过匹配Spring容器中的bean可以满足的依赖项数量最多的构造函数将被选择。如果没有一个候选函数得到满足，那么将使用主/默认构造函数(如果存在的话)
+                一种通用的实现模式：所有依赖项都可以在一个惟一的多参数构造函数中声明——例如，声明为一个没有@Autowired注释的单一公共构造函数
+        自动装配的非必需性：不是不装配，而是在无匹配的情况下忽略，避免报错
+            @Autowired(required = false)
+            Optional<T>
+            @Nullable
+            
+            
+    @Autowired、@Inject、@Value和@Resource注释由Spring BeanPostProcessor实现处理。这意味着您不能在自己的BeanPostProcessor或BeanFactoryPostProcessor类型(如果有的话)中应用这些注释。这些类型必须通过使用XML或Spring @Bean方法显式“连接”起来
     
     
     
