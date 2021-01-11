@@ -144,6 +144,28 @@ Bean定义继承-----------
             @Autowired(required = false)
             Optional<T>
             @Nullable
+    自定义注解
+    使用泛型作为自动转配限定符
+    定制自动装配配置
+    @Resource
+    @Value：注入外部属性
+        默认值
+        定制@Value的值转换为目标类型的过程
+        配合SpEL表达式
+        使用@PostConstruct和@PreDestroy
+        
+路径扫描和管理组件----------------------
+    @Components和原型注解
+    原注解和组合注解
+    自动检测类和注册Bean定义
+    使用过滤器自定义扫描过程
+    在组件中定义Bean元数据
+    命名自动检测的组件
+    自动检测的组件的作用域
+
+基于java的容器配置----------------------------
+    
+      
             
             
     @Autowired、@Inject、@Value和@Resource注释由Spring BeanPostProcessor实现处理。这意味着您不能在自己的BeanPostProcessor或BeanFactoryPostProcessor类型(如果有的话)中应用这些注释。这些类型必须通过使用XML或Spring @Bean方法显式“连接”起来
